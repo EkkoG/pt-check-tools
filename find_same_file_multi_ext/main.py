@@ -85,7 +85,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--rm', help='删除无硬连接文件', action='store_true')
     parser.add_argument('--path', help='文件路径, 用于查找硬连接文件, 当--check-hard-link 为 True 时必须提供', required='--check-hard-link' in sys.argv)
-    parser.add_argument('--check-hard-link', help='检查硬连接', action='store_true')
+    parser.add_argument('--check-hard-link', help='当文件硬连接数大于 1 时查找其他副本位置', action='store_true')
     parser.add_argument('dir', help='文件路径', nargs='?')
     args = parser.parse_args()
     if args.dir is None:
