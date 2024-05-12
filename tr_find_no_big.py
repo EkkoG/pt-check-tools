@@ -8,6 +8,7 @@ def main(tc: transmissionrpc.Client, max_size: int):
     cache = {}
     for t in all_torrent_in_tr:
         files = t.__getattr__('files')
+        files = sorted(files, key=lambda x: x['name'])
         files_name = ''.join(list(map(lambda x: x['name'], files)))
 
         key = t.__getattr__('name') + files_name
@@ -46,6 +47,6 @@ if __name__ == '__main__':
     parser.add_argument('--max', default=3)
     args = parser.parse_args()
     tc = transmissionrpc.Client(args.host, port=args.port, user=args.user, password=args.password)
-    main(tc, args.max)
+    main(tc, int(args.max))
 
 
