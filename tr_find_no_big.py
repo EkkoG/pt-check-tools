@@ -1,6 +1,16 @@
 import transmissionrpc
 import argparse
-from tools import format_size
+
+def format_size(size):
+    if size < 1024:
+        return "{} B".format(size)
+    elif size < 1024 * 1024:
+        return "{} KB".format(round(size / 1024, 2))
+    elif size < 1024 * 1024 * 1024:
+        return "{} MB".format(round(size / 1024 / 1024, 2))
+    else:
+        return "{} GB".format(round(size / 1024 / 1024 / 1024, 2))
+
 
 def groupby(lst, key_func):
     grouped_dict = {}
