@@ -11,7 +11,7 @@ def clean(tc, deleted_torrents, file_missing_torrents, rm):
             group_by_error[error] = []
         group_by_error[error].append(t)
 
-    deleted_torrents_errors = ['torrent not registered with this tracker', '006-种子尚未上传或者已经被删除', 'Torrent not exists']
+    deleted_torrents_errors = ['err torrent banned', 'torrent not registered with this tracker', '006-种子尚未上传或者已经被删除', 'Torrent not exists']
     file_missing_error = ['No data found!']
 
     if deleted_torrents:
@@ -31,6 +31,12 @@ def clean(tc, deleted_torrents, file_missing_torrents, rm):
                         print(f"文件丢失, {t.id} {t.name}")
                         if rm:
                             tc.remove_torrent(t.id, delete_data=False)
+
+    for error, ts in group_by_error.items():
+        if error not in deleted_torrents_errors and error not in file_missing_error:
+            for t in ts:
+                print(error, t.id, t.name)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

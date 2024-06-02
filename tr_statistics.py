@@ -44,19 +44,6 @@ def clean(tc):
         #     print(t.name, t.__getattr__('errorString'))
             # tc.remove_torrent(t.id, delete_data=False)
 
-def frds_size(tc):
-    size = 0
-    cache = {}
-    for t in tc.get_torrents(arguments=['id', 'priorities', 'wanted', 'files', 'name', 'status', 'percentDone', 'rateDownload', 'rateUpload', 'eta', 'error', 'errorString']):
-        if t.name in cache:
-            continue
-        cache[t.name] = True
-
-        if 'FRDS' in t.name:
-            for f in t.files().values():
-                size += f['size']
-    print(f"FRDS 种子大小: {size / 1024 / 1024 / 1024:.2f} GB")
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--host', default='127.0.0.1')

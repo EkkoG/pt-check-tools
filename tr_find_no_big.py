@@ -2,8 +2,17 @@ import transmissionrpc
 import argparse
 from tools import format_size
 
+def groupby(lst, key_func):
+    grouped_dict = {}
+    for item in lst:
+        key = key_func(item)
+        if key in grouped_dict:
+            grouped_dict[key].append(item)
+        else:
+            grouped_dict[key] = [item]
+    return grouped_dict
 
-def main(tc: transmissionrpc.Client, max_size: int):
+def main(tc: transmissionrpc.Client, min_size: int):
     all_torrent_in_tr = tc.get_torrents(arguments=['addedDate', 'id' ,'trackerList', 'totalSize', 'name', 'status', 'percentDone', 'rateDownload', 'rateUpload', 'eta', 'error', 'errorString', 'files', 'downloadDir'])
     cache = {}
     for t in all_torrent_in_tr:
@@ -34,8 +43,9 @@ def main(tc: transmissionrpc.Client, max_size: int):
         if len(ts) > 1:
             t_max_size = max([t.__getattr__('totalSize') for t in ts])
             # all_size_except_max = sum([t.__getattr__('totalSize') for t in ts]) - max_size
-            if t_max_size < max_size * 1024 * 1024 * 1024:
+            if t_max_size < min_size * 1024 * 1024 * 1024:
                 print(name, '疑似没有合集', '最大种子', format_size(t_max_size))
+                
                 print()
 
 if __name__ == '__main__':
@@ -44,9 +54,9 @@ if __name__ == '__main__':
     parser.add_argument('--port', default=9091)
     parser.add_argument('--user', default='transmission')
     parser.add_argument('--password', default='transmission')
-    parser.add_argument('--max', default=3)
+    parser.add_argument('--min', default=3)
     args = parser.parse_args()
     tc = transmissionrpc.Client(args.host, port=args.port, user=args.user, password=args.password)
-    main(tc, int(args.max))
+    main(tc, int(args.min))
 
 
